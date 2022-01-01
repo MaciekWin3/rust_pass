@@ -8,27 +8,22 @@ fn main() {
 
     //let mut option = String::new();
 
-    println!("{{}}");
-
-    for i in 1..16 {
-        let number = rand::thread_rng().gen_range(0..characters.len());
-        password += &characters[number - 1..number];
-    }
-
-    println!("{}", password);
     //io::stdin()
     //    .read_line(&mut option)
     //    .expect("Failed to read the line");
+
+    println!("Generated Password: {}", generate_password(16, true, true, true));
 }
 
 fn generate_password(length: i32, include_uppercase: bool,
     include_special_characters: bool, include_numbers: bool) -> String {
+
     let mut password = String::new();
-    let lowercase_letters = "abcdefghijklmnopqrstuvwxyz";
-    let uppercase_letters = lowercase_letters.to_uppercase();
+    let mut password_builder = String::from("abcdefghijklmnopqrstuvwxyz");
+
+    let uppercase_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let numbers = "0123456789";
     let special_characters = "`!@#$%^&*()<>.,?;':[]{}";
-    let password_builder = String::new();
 
     if include_uppercase {
         password_builder += &uppercase_letters;
@@ -42,10 +37,12 @@ fn generate_password(length: i32, include_uppercase: bool,
         password_builder += &special_characters;
     }
 
-    for i in 0..length {
+    let mut i = 0;
 
+    while i < length {
+        let number = rand::thread_rng().gen_range(0..password_builder.len());
+        password += &password_builder[number - 1..number];
+        i += 1;
     }
-    //let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     password
 }
