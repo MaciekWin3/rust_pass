@@ -1,37 +1,77 @@
 use rand::Rng;
+use std::io::{stdout, Write};
 use std::io;
 use std::process;
+use firebase_rs::*;
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
+    ExecutableCommand,
+    Result,
+    event
+};
 
 fn main() {
-    println!("Welcome to rust_pass!");
-    println!("1. Generate new password");
-    println!("2. Generate and save password");
-    println!("3. Show password");
-    println!("3. Read password");
-    println!("4. Update password!");
-    println!("Press q to exit");
+    loop {
+        display_menu();
 
-    let mut option = String::new();
+        let mut option = String::new();
 
-    io::stdin().read_line(&mut option).unwrap_or_else(|err|{
-        println!("Error: {}", err);
-        process::exit(1);
-    });
+        io::stdin().read_line(&mut option).unwrap_or_else(|err|{
+            println!("Error: {}", err);
+            process::exit(1);
+        });
 
-    println!("{}", option);
 
-    match option.as_str().trim() {
-        "1" => {
-            let password = generate_password(16, true, true, true);
-            println!("Generated password: {}", password);
-        },
-        _ => {
-            println!("Działa");
-            //panic!("Error!");
+        //println!("{}", option);
+
+        match option.as_str().trim() {
+            "1" => {
+                let password = generate_password(16, true, true, true);
+                println!("Generated password: {}", password);
+            },
+            "2" => {
+                todo!();
+            }
+            "3" => {
+                todo!();
+            }
+            "4" => {
+                todo!();
+            },
+            "5" => {
+                todo!();
+            },
+            "q" => {
+                println!("Exiting...");
+                break;
+            }
+            _ => {
+                println!("Invalid command! Please try again or exit program by pressing q");
+            }
         }
     }
+}
 
-    //println!("Generated Password: {}", generate_password(16, true, true, true));
+fn display_menu() -> Result<()> {
+
+    stdout()
+        .execute(SetForegroundColor(Color::Blue))?
+        .execute(Print(
+            "Welcome to rust_pass!
+---------------------------------
+1. Generate new password
+2. Generate and save password
+3. Show password
+4. Read password
+5. Update password!
+---------------------------------
+Press q to quit
+---------------------------------
+Choose option: "))?
+        .execute(ResetColor)?;
+
+    Ok(())
 }
 
 fn generate_password(length: i32, include_uppercase: bool,
