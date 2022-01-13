@@ -2,7 +2,6 @@ use rand::Rng;
 use std::io::{stdout, Write};
 use std::io;
 use std::process;
-use firebase_rs::*;
 use crossterm::{
     execute,
     style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
@@ -58,17 +57,17 @@ fn display_menu() -> Result<()> {
     stdout()
         .execute(SetForegroundColor(Color::Blue))?
         .execute(Print(
-            "Welcome to rust_pass!
----------------------------------
-1. Generate new password
-2. Generate and save password
-3. Show password
-4. Read password
-5. Update password!
----------------------------------
-Press q to quit
----------------------------------
-Choose option: "))?
+            "Welcome to rust_pass!\n\
+            --------------------------------- \n\
+            1. Generate new password \n\
+            2. Generate and save password \n\
+            3. Show password \n\
+            4. Read password \n\
+            5. Update password \n\
+            --------------------------------- \n\
+            Press q to quit \n\
+            --------------------------------- \n\
+            Choose option: "))?
         .execute(ResetColor)?;
 
     Ok(())
