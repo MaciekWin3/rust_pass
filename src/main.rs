@@ -1,3 +1,6 @@
+extern crate passwords;
+
+use passwords::PasswordGenerator;
 use rand::Rng;
 use std::io::{stdout, Write};
 use std::io;
@@ -21,16 +24,14 @@ fn main() {
             process::exit(1);
         });
 
-
-        //println!("{}", option);
-
         match option.as_str().trim() {
             "1" => {
-                let password = generate_password(16, true, true, true);
+                let password = generate_password(16, true, true, true,
+                    true, false, true, true);
                 println!("Generated password: {}", password);
             },
             "2" => {
-                todo!();
+                println!("Please provide informations below");
             }
             "3" => {
                 todo!();
@@ -52,15 +53,20 @@ fn main() {
     }
 }
 
+fn generate_password_user_input() -> Result<()> {
+    stdout().execute(Print("Length: "))?;
+    Ok(())
+}
+
 fn display_menu() -> Result<()> {
 
     stdout()
-        .execute(SetForegroundColor(Color::Blue))?
+        .execute(SetForegroundColor(Color::Magenta))?
         .execute(Print(
             "Welcome to rust_pass!\n\
             --------------------------------- \n\
-            1. Generate new password \n\
-            2. Generate and save password \n\
+            1. Quick password generation \n\
+            2. Generate password \n\
             3. Show password \n\
             4. Read password \n\
             5. Update password \n\
@@ -73,7 +79,22 @@ fn display_menu() -> Result<()> {
     Ok(())
 }
 
-fn generate_password(length: i32, include_uppercase: bool,
+fn generate_password(length: usize, numbers: bool, lowercase_letters: bool, uppercase_letters: bool,
+    symbols: bool, spaces: bool, exclude_similar_characters: bool, strict: bool) -> String {
+    let pg = PasswordGenerator {
+       length,
+       numbers,
+       lowercase_letters,
+       uppercase_letters,
+       symbols,
+       spaces,
+       exclude_similar_characters,
+       strict
+   };
+   return pg.generate_one().unwrap();
+}
+
+fn generate_password_obsolete(length: i32, include_uppercase: bool,
     include_special_characters: bool, include_numbers: bool) -> String {
 
     let mut password = String::new();
