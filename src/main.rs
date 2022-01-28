@@ -1,17 +1,15 @@
 extern crate passwords;
 
+use crossterm::{
+    event, execute,
+    style::{Color, Print, ResetColor, SetForegroundColor},
+    ExecutableCommand, Result,
+};
 use passwords::PasswordGenerator;
 use rand::Rng;
-use std::io::{stdout, Write};
 use std::io;
+use std::io::stdout;
 use std::process;
-use crossterm::{
-    execute,
-    style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
-    ExecutableCommand,
-    Result,
-    event
-};
 
 fn main() {
     loop {
@@ -19,17 +17,16 @@ fn main() {
 
         let mut option = String::new();
 
-        io::stdin().read_line(&mut option).unwrap_or_else(|err|{
+        io::stdin().read_line(&mut option).unwrap_or_else(|err| {
             println!("Error: {}", err);
             process::exit(1);
         });
 
         match option.as_str().trim() {
             "1" => {
-                let password = generate_password(16, true, true, true,
-                    true, false, true, true);
+                let password = generate_password(16, true, true, true, true, false, true, true);
                 println!("Generated password: {}", password);
-            },
+            }
             "2" => {
                 println!("Please provide informations below");
             }
@@ -38,10 +35,10 @@ fn main() {
             }
             "4" => {
                 todo!();
-            },
+            }
             "5" => {
                 todo!();
-            },
+            }
             "q" => {
                 println!("Exiting...");
                 break;
@@ -59,7 +56,6 @@ fn generate_password_user_input() -> Result<()> {
 }
 
 fn display_menu() -> Result<()> {
-
     stdout()
         .execute(SetForegroundColor(Color::Magenta))?
         .execute(Print(
@@ -73,30 +69,42 @@ fn display_menu() -> Result<()> {
             --------------------------------- \n\
             Press q to quit \n\
             --------------------------------- \n\
-            Choose option: "))?
+            Choose option: ",
+        ))?
         .execute(ResetColor)?;
 
     Ok(())
 }
 
-fn generate_password(length: usize, numbers: bool, lowercase_letters: bool, uppercase_letters: bool,
-    symbols: bool, spaces: bool, exclude_similar_characters: bool, strict: bool) -> String {
+fn generate_password(
+    length: usize,
+    numbers: bool,
+    lowercase_letters: bool,
+    uppercase_letters: bool,
+    symbols: bool,
+    spaces: bool,
+    exclude_similar_characters: bool,
+    strict: bool,
+) -> String {
     let pg = PasswordGenerator {
-       length,
-       numbers,
-       lowercase_letters,
-       uppercase_letters,
-       symbols,
-       spaces,
-       exclude_similar_characters,
-       strict
-   };
-   return pg.generate_one().unwrap();
+        length,
+        numbers,
+        lowercase_letters,
+        uppercase_letters,
+        symbols,
+        spaces,
+        exclude_similar_characters,
+        strict,
+    };
+    return pg.generate_one().unwrap();
 }
 
-fn generate_password_obsolete(length: i32, include_uppercase: bool,
-    include_special_characters: bool, include_numbers: bool) -> String {
-
+fn generate_password_obsolete(
+    length: i32,
+    include_uppercase: bool,
+    include_special_characters: bool,
+    include_numbers: bool,
+) -> String {
     let mut password = String::new();
     let mut password_builder = String::from("abcdefghijklmnopqrstuvwxyz");
 
